@@ -1,0 +1,9 @@
+apiVersion: enmasse.io/v1beta1
+kind: Address
+metadata:
+  name: widgetspace.crm-enquiry
+  namespace: widgets
+spec:
+  address: crm-enquiry
+  type: queue
+  plan: standard-small-queue

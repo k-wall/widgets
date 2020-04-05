@@ -1,0 +1,12 @@
+apiVersion: enmasse.io/v1beta1
+kind: Address
+metadata:
+  namespace: widgets
+  name: widgetspace.stockcontrol
+spec:
+  address: stockcontrol
+  plan: standard-small-subscription
+  topic: orders
+  type: subscription
+  subscription:
+    maxConsumers: 10

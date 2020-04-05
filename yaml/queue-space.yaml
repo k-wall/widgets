@@ -1,0 +1,14 @@
+apiVersion: enmasse.io/v1beta1
+kind: AddressSpace
+metadata:
+  namespace: widgets
+  name: widgetspace
+  annotations:
+    enmasse.io/infra-uuid: widgetspace
+spec:
+  type: standard
+  plan: standard-small
+  authenticationService:
+      type: standard
+  
+
