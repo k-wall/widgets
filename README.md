@@ -16,3 +16,8 @@ oc apply -f yaml/
 oc login -u developer -p developer
 
 ```
+
+Run with:
+```
+mvn exec:java
+```
