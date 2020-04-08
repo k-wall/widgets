@@ -2,9 +2,9 @@ apiVersion: user.enmasse.io/v1beta1
 kind: MessagingUser
 metadata:
   namespace: widgets
-  name: widgetspace.guest
+  name: widgetspace.processing
 spec:
-  username: guest
+  username: processing
   authentication:
     type: password
     password: Z3Vlc3Q= # Base64 encoded

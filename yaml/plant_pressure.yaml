@@ -1,0 +1,9 @@
+apiVersion: enmasse.io/v1beta1
+kind: Address
+metadata:
+  name: widgetspace.plant-pressure
+  namespace: widgets
+spec:
+  address: plant-pressure
+  type: multicast
+  plan: standard-small-multicast

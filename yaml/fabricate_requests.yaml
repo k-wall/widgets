@@ -1,9 +1,9 @@
 apiVersion: enmasse.io/v1beta1
 kind: Address
 metadata:
-  name: widgetspace.crm-enquiry
+  name: widgetspace.fabricate-requests
   namespace: widgets
 spec:
-  address: crm-enquiry
+  address: fabricate-requests
   type: queue
   plan: standard-small-queue

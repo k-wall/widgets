@@ -1,9 +1,0 @@
-apiVersion: enmasse.io/v1beta1
-kind: Address
-metadata:
-  name: widgetspace.orders
-  namespace: widgets
-spec:
-  address: orders
-  type: topic
-  plan: standard-small-topic

@@ -1,0 +1,9 @@
+apiVersion: enmasse.io/v1beta1
+kind: Address
+metadata:
+  name: widgetspace.plant-temperature
+  namespace: widgets
+spec:
+  address: plant-temperature
+  type: multicast
+  plan: standard-small-multicast

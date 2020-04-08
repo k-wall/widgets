@@ -31,16 +31,16 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.lang.IllegalStateException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class HelloWorld {
 
-    public static final String CRM_ENQUIRY = "crm-enquiry";
-    public static final String STOCKCONTROL = "stockcontrol";
-    public static final String WAREHOUSE = "warehouse";
-    public static final String ORDERS = "orders";
+    public static final String FABRICATE_REQUEST = "fabricate-requests";
+    public static final String TEMPERATURE = "plant-temperature";
+    public static final String PRESSURE = "plant-pressure";
 
     public static void main(String[] args) throws Exception {
 
@@ -48,18 +48,29 @@ public class HelloWorld {
 
         // Queue-space
         // Each producer max 1 per second, consumer 0.75 per second.
-        helloWorld.makeTraffic("crm1", "crm", Arrays.asList(CRM_ENQUIRY, CRM_ENQUIRY),
-                Arrays.asList(CRM_ENQUIRY, CRM_ENQUIRY, CRM_ENQUIRY, CRM_ENQUIRY), 1, 0.75);
+        helloWorld.makeTraffic("fab1", "fab", Arrays.asList(FABRICATE_REQUEST, FABRICATE_REQUEST),
+                Arrays.asList(FABRICATE_REQUEST, FABRICATE_REQUEST), 10, 7.55);
 
-        helloWorld.makeTraffic("crm1", "crm", Arrays.asList(CRM_ENQUIRY, CRM_ENQUIRY),
-                Arrays.asList(CRM_ENQUIRY, CRM_ENQUIRY, CRM_ENQUIRY, CRM_ENQUIRY), 1, 0.75);
+        helloWorld.makeTraffic("fab2", "fab", Arrays.asList(FABRICATE_REQUEST),
+                Arrays.asList(FABRICATE_REQUEST, FABRICATE_REQUEST, FABRICATE_REQUEST, FABRICATE_REQUEST), 10, 8.5);
 
 
-        helloWorld.makeTraffic("con2", "crm", Arrays.asList(ORDERS),
-                Arrays.asList(WAREHOUSE, STOCKCONTROL), 1, 0.9  );
+        helloWorld.makeTraffic("tpub", "processing", Arrays.asList(TEMPERATURE),
+                Collections.emptyList(), 50, 0  );
 
-        helloWorld.makeTraffic("con2", "crm", Arrays.asList(ORDERS),
-                Arrays.asList(WAREHOUSE, STOCKCONTROL), 1, 0.75);
+        helloWorld.makeTraffic("tcon1", "processing", Collections.emptyList(),
+                Arrays.asList(TEMPERATURE), 1, 50  );
+
+        helloWorld.makeTraffic("tcon2", "processing", Collections.emptyList(),
+                Arrays.asList(TEMPERATURE), 1, 50  );
+
+
+        helloWorld.makeTraffic("pub", "processing", Arrays.asList(PRESSURE),
+                Collections.emptyList(), 100, 5);
+        helloWorld.makeTraffic("pcon1", "processing", Collections.emptyList(),
+                Arrays.asList(PRESSURE, PRESSURE), 1, 100);
+        helloWorld.makeTraffic("pcon2", "processing", Arrays.asList(PRESSURE),
+                Arrays.asList(PRESSURE, PRESSURE), 1, 100);
 
 
     }
@@ -132,7 +143,6 @@ public class HelloWorld {
             Session producerSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
             MessageProducer producer = producerSession.createProducer(d);
-            MessageProducer producer2 = producerSession.createProducer(d);
 
             RateLimiter rateLimiter = RateLimiter.create(produceRate);
 
@@ -140,16 +150,11 @@ public class HelloWorld {
             long batchStart = System.currentTimeMillis();
             while(true) {
                 rateLimiter.acquire();
-                if (count % 2 == 0) {
-
-                    producer.send(producerSession.createMessage());
-                } else {
-                    producer2.send(producerSession.createMessage());
-                }
+                producer.send(producerSession.createMessage());
                 count++;
                 if (count % 100 == 0) {
                     long took = System.currentTimeMillis() - batchStart;
-                    System.out.printf("%s/%s took %d ms to proceduce %d messages\n", name, producerName, took/1000, count);
+                    System.out.printf("%s/%s took %d ms to produce %d messages\n", name, producerName, took/1000, count);
                     count = 0;
                     batchStart = System.currentTimeMillis();
                 }
